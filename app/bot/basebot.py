@@ -1,15 +1,13 @@
 import requests
-import logging
 
 class BaseBot:
     def __init__(self, token):
         self.token = token
-        self.logger = logging.getLogger(__name__)
-        self.update_id = 0
+        self.offset = 0
 
     def make_query(self, method, payload=None):
         url = 'https://api.telegram.org/bot{0}/{1}'.format(self.token, method)
-        response = requests.post(url, payload, timeout=0.5)
+        response = requests.post(url, payload, timeout=1)
         return response.json()
 
     def get_me(self):
@@ -51,3 +49,10 @@ class BaseBot:
     def unban_chat_member(self, chat_id, user_id):
         json_response = self.make_query('unbanChatMember', {'chat_id': chat_id, 'user_id': user_id})
         return json_response
+
+    def process_updates(self):
+        json_response = self.get_updates(self.offset)
+        if 'result' in json_response:
+            if json_response['result']:
+                self.offset = json_response['result'][0]['update_id'] + 1
+                return json_response['result'][0]
