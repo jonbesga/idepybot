@@ -27,7 +27,7 @@ class BaseBot:
         return json_response
 
     def send_message(self, chat_id, text=None, parse_mode=None, disable_web_page_preview=None, disable_notification=None, reply_to_message_id=None, reply_markup=None):
-        json_response = self.make_query('sendMessage', {'chat_id': chat_id, 'text': text, 'parse_mode': parse_mode, 'disable_notification': disable_notification, 'reply_to_message_id': reply_to_message_id, 'reply_markup': reply_markup})
+        json_response = self.make_query('sendMessage', {'chat_id': chat_id, 'text': text, 'disable_web_page_preview': disable_web_page_preview, 'parse_mode': parse_mode, 'disable_notification': disable_notification, 'reply_to_message_id': reply_to_message_id, 'reply_markup': reply_markup})
         return json_response
 
     def forward_message(self, chat_id, from_chat_id, message_id, disable_notification=False):
