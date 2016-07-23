@@ -16,7 +16,6 @@ HEROKU_APP = config.get("Heroku", "app_url")
 # Create bot object and set webhook
 bot = Bot(TOKEN)
 json_response = bot.set_webhook(HEROKU_APP + '/{0}'.format(TOKEN))
-logger.info(json_response['description'])
 
 @app.route("/{0}".format(TOKEN), methods=['POST'])
 def hook():
