@@ -2,6 +2,7 @@ from .basebot import BaseBot
 import requests
 import time
 import json
+import re
 
 class Bot(BaseBot):
 
