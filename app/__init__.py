@@ -12,8 +12,8 @@ app.debug = True
 #TOKEN = config.get("Bot", "token")
 #HEROKU_APP = config.get("Heroku", "app_url")
 
-TOKEN = S3Client(os.environ['token'], os.environ['token'])
-HEROKU_APP = S3Client(os.environ['app_url'], os.environ['app_url'])
+TOKEN = os.environ['token']
+HEROKU_APP = os.environ['app_url']
 
 # Create bot object and set webhook
 bot = Bot(TOKEN)
