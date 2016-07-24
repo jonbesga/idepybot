@@ -30,8 +30,8 @@ class Bot(BaseBot):
                 'ide':'Boh. Todo el mundo sabe que el mejor IDE es <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Eclipse</a>.',
             }
 
-            for word in keywords:
-                if word in response['message']['text'].lower():
+            for word in re.sub('[!@#$?]', '', response['message']['text'].lower()).split():
+                if word in keywords:
                     json_response = self.send_message(response['message']['chat']['id'], parse_mode='HTML', text=keywords[word], disable_web_page_preview=True)
                     self.last_time_someone_said_keyword = time.time()
                     return True
