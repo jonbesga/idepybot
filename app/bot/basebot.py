@@ -10,6 +10,7 @@ class BaseBot:
         response = requests.post(url, payload, timeout=1)
         return response.json()
 
+    # For reference, see: https://core.telegram.org/bots/api#available-methods
     def get_me(self):
         json_response = self.make_query('getMe')
         return json_response
