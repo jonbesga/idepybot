@@ -37,11 +37,15 @@ class Bot(BaseBot):
         # If the needed time has passed since the last keyword was detected
         if (time.time() > self.last_time_someone_said_keyword +
                 self.time_interval_between_keyword_detection):
-            msg = ('Boh. Todo el mundo sabe que el mejor IDE es '
-                   '<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">'
-                   'Eclipse</a>.'),
+            # msg = ('Boh. Todo el mundo sabe que el mejor IDE es '
+            #       '<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">'
+            # 'Eclipse</a>.')
+
+            bot_msg = ('Si estas interesado en bots puedes mirar '
+                       '<a href="https://github.com/jabesga/idepybot">'
+                       'como estoy hecho</a>.')
             keywords = {
-                'ide': msg,
+                'bot': bot_msg,
             }
             # Check if any keyword is being used in the message
             for word in re.sub('[!@#$?]', '',

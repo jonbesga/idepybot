@@ -1,4 +1,4 @@
 Flask==0.10.1
 gunicorn==18.0.0
 requests==2.10.0
-configparser==3.5.0
+# configparser==3.5.0
