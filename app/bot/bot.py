@@ -2,7 +2,7 @@ from .basebot import BaseBot
 import requests
 import time
 import re
-
+import json
 
 class Bot(BaseBot):
 
@@ -64,3 +64,29 @@ class Bot(BaseBot):
 
             if 'text' in response['message']:
                 self.check_if_someone_said_keyword(response)
+
+        if 'inline_query' in response:
+            if response['inline_query']['query']:
+                unix_timestamp = response['inline_query']['query']
+                url = 'http://www.convert-unix-time.com/api?timestamp={}'.format(unix_timestamp)
+
+                json_response = requests.get(url).json()
+
+                if 'utcDate' in json_response:
+                    utcDate = json_response['utcDate']
+                else:
+                    utcDate = 'Impossible Unix Timestamp'
+
+                document = json.dumps([{'type': 'article',
+                                        'id': '0',
+                                        'input_message_content': {'message_text': utcDate },
+                                        'title': unix_timestamp,
+                                        'description': utcDate,
+                                        'thumb_url': 'http://a1.mzstatic.com/us/r30/Purple3/v4/78/50/a3/7850a3cb-8c1b-c8e0-c9ca-201575b29f54/icon175x175.png',
+                                        'thumb_width': 512,
+                                        'thumb_height': 512}])
+
+                json_response = requests.post(
+                    url='https://api.telegram.org/bot{0}/{1}'.format(self.token, 'answerInlineQuery'),
+                    data={'inline_query_id': response['inline_query']['id'], 'results': document}
+                ).json()
