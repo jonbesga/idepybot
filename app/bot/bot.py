@@ -4,6 +4,23 @@ import time
 import re
 import json
 
+class Caesar():
+
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
+
+    def __init__(self, key):
+        self.key = key
+        self.shifted_alphabet = self.alphabet[key:] + self.alphabet[0:key]
+        self.encrypt_dict = str.maketrans(self.alphabet, self.shifted_alphabet)
+        self.decrypt_dict = str.maketrans(self.shifted_alphabet, self.alphabet)
+
+    def encrypt_sentence(self, sentence):
+        return sentence.translate(self.encrypt_dict)
+
+    def decrypt_sentence(self, sentence):
+        return sentence.translate(self.decrypt_dict)
+
+
 class Bot(BaseBot):
 
     def __init__(self, token):
@@ -85,6 +102,29 @@ class Bot(BaseBot):
                     data={'inline_query_id': response['inline_query']['id'], 'results': document}
                 ).json()
 
+    # YOU CAN TAKE A LOOK O THIS CODE AT: github.com/jabesga. It's used to make Telegram bots
+
+    def check_if_is_caesar(self, response):
+        if result['inline_query']['query']:
+            if response['inline_query']['query'].split(' ')[0] == 'caesar':
+                sentence = result['inline_query']['query'].split(' ')[1]
+                caesar = Caesar(13)
+                encrypted_sentence = caesar.encrypt_sentence(sentence)
+
+                document = json.dumps([{'type': 'article',
+                                        'id': '0',
+                                        'input_message_content': {'message_text': encrypted_sentence },
+                                        'title': "Send your text encrypted",
+                                        'description': encrypted_sentence
+	            }])
+
+                json_response = requests.post(
+                    url='https://api.telegram.org/bot{0}/{1}'.format(self.token, 'answerInlineQuery'),
+                    data={'inline_query_id': result['inline_query']['id'], 'results': document},
+                    timeout=0.5
+                ).json()
+
+
     def process_hook(self, response):
         if 'message' in response:
             self.check_if_user_joined(response)
@@ -94,3 +134,4 @@ class Bot(BaseBot):
 
         if 'inline_query' in response:
             self.check_if_is_unix_timestamp(response)
+            self.check_if_is_caesar(response)
