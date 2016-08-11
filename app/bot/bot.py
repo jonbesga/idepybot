@@ -105,9 +105,9 @@ class Bot(BaseBot):
     # YOU CAN TAKE A LOOK O THIS CODE AT: github.com/jabesga. It's used to make Telegram bots
 
     def check_if_is_caesar(self, response):
-        if result['inline_query']['query']:
+        if response['inline_query']['query']:
             if response['inline_query']['query'].split(' ')[0] == 'caesar':
-                sentence = result['inline_query']['query'].split(' ')[1]
+                sentence = response['inline_query']['query'].split(' ')[1]
                 caesar = Caesar(13)
                 encrypted_sentence = caesar.encrypt_sentence(sentence)
 
@@ -120,7 +120,7 @@ class Bot(BaseBot):
 
                 json_response = requests.post(
                     url='https://api.telegram.org/bot{0}/{1}'.format(self.token, 'answerInlineQuery'),
-                    data={'inline_query_id': result['inline_query']['id'], 'results': document},
+                    data={'inline_query_id': response['inline_query']['id'], 'results': document},
                     timeout=0.5
                 ).json()
 
