@@ -58,16 +58,10 @@ class Bot(BaseBot):
                     return True
         return False
 
-    def process_hook(self, response):
-        if 'message' in response:
-            self.check_if_user_joined(response)
-
-            if 'text' in response['message']:
-                self.check_if_someone_said_keyword(response)
-
-        if 'inline_query' in response:
-            if response['inline_query']['query']:
-                unix_timestamp = response['inline_query']['query']
+    def check_if_is_unix_timestamp(self, response):
+        if response['inline_query']['query']:
+            if response['inline_query']['query'].split(' ')[0] == 'unix':
+                unix_timestamp = response['inline_query']['query'].split(' ')[1]
                 url = 'http://www.convert-unix-time.com/api?timestamp={}'.format(unix_timestamp)
 
                 json_response = requests.get(url).json()
@@ -90,3 +84,13 @@ class Bot(BaseBot):
                     url='https://api.telegram.org/bot{0}/{1}'.format(self.token, 'answerInlineQuery'),
                     data={'inline_query_id': response['inline_query']['id'], 'results': document}
                 ).json()
+
+    def process_hook(self, response):
+        if 'message' in response:
+            self.check_if_user_joined(response)
+
+            if 'text' in response['message']:
+                self.check_if_someone_said_keyword(response)
+
+        if 'inline_query' in response:
+            self.check_if_is_unix_timestamp(response)
