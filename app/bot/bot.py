@@ -27,6 +27,23 @@ class Bot(BaseBot):
         super().__init__(token)
         self.last_time_someone_said_keyword = 0
         self.time_interval_between_keyword_detection = 60
+        self.pinned_message = '''
+@astrojuanlu: ¡Hola a todos! Bienvenidos al grupo de Telegram de la Asociación Python España. Este grupo está abierto a todo el mundo y en él se hablan temas que tienen que ver con la comunidad Python española, se preguntan dudas y se intercambia información. Algunos consejos y normas para empezar:
+
+* Preséntate cuando llegues 😄
+* Los principiantes son bienvenidos
+* Si no conoces un grupo local en tu ciudad, dilo y te indicaremos
+* Temas on-topic: dudas sobre Python, discusión general, #PyConES, eventos, reuniones (entre otros)
+* Este es un grupo grande, se recomienda evitar el bombardeo de mensajes (_flood_) en la medida de lo posible
+* Para asuntos profundos, se recomienda acudir a la lista de correo https://lists.es.python.org/listinfo/general
+* Las discusiones en el grupo se rigen por el código de conducta de la asociación, que puedes leer en http://documentos-asociacion.es.python.org/c%C3%B3digo%20de%20conducta.html
+* En concreto, las bromas de contenido sexual o inapropiado no están permitidas
+* Este grupo está moderado, sé respetuoso y tolerante con los demás
+* "We are all consenting adults here"
+* La web de la asociación es http://es.python.org y te puedes hacer socio por 30 € al año para apoyar las actividades y eventos que desarrolla, si quieres
+
+¡Disfruta del grupo!
+        '''
 
     def check_if_user_joined(self, response):
         # If the messsage has the 'new chat participant'
@@ -42,11 +59,15 @@ class Bot(BaseBot):
                 gender_response = requests.get(url)
                 # Change the welcome_message in concordance
                 if gender_response.json()['gender'] == 'female':
-                    welcome_message = '<b>¡Bienvenida '
+                    welcome_message = '<b>¡Bienvenida a Python España '
                 else:
-                    welcome_message = '<b>¡Bienvenido '
+                    welcome_message = '<b>¡Bienvenido a Python España '
 
-                welcome_message += '{0}!</b>'.format(first_name)
+                welcome_message += '{0}!</b>\n'.format(first_name)
+                welcome_message += ('Durante tu estancia aquí es importante que '
+                                    'conozcas las reglas del grupo. Utiliza el '
+                                    'comando /rules y te las enviare por privado.')
+
                 self.send_message(msg['chat']['id'], parse_mode='HTML',
                                   text=welcome_message)
 
@@ -75,6 +96,7 @@ class Bot(BaseBot):
                     return True
         return False
 
+    # Todo Testing
     def check_if_is_unix_timestamp(self, response):
         if response['inline_query']['query']:
             if response['inline_query']['query'].split(' ')[0] == 'unix':
@@ -102,8 +124,7 @@ class Bot(BaseBot):
                     data={'inline_query_id': response['inline_query']['id'], 'results': document}
                 ).json()
 
-    # YOU CAN TAKE A LOOK O THIS CODE AT: github.com/jabesga. It's used to make Telegram bots
-
+    # Todo Testing
     def check_if_is_caesar(self, response):
         if response['inline_query']['query']:
             if response['inline_query']['query'].split(' ')[0] == 'caesar':
@@ -130,8 +151,14 @@ class Bot(BaseBot):
             self.check_if_user_joined(response)
 
             if 'text' in response['message']:
-                self.check_if_someone_said_keyword(response)
+                if response['message']['text'] == '/rules' or response['message']['text'] == '/rules@IdePyBot':
+                    json_response = self.send_message(response['message']['from']['id'],
+                                      parse_mode='HTML', text=self.pinned_message)
+                    # print(json_response)
+                else:
+                    self.check_if_someone_said_keyword(response)
 
         if 'inline_query' in response:
-            self.check_if_is_unix_timestamp(response)
-            self.check_if_is_caesar(response)
+            pass
+            #self.check_if_is_unix_timestamp(response)
+            #self.check_if_is_caesar(response)
