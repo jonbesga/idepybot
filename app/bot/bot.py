@@ -70,7 +70,7 @@ class Bot(BaseBot):
                                     'para conocerlas.')
 
                 self.send_message(msg['chat']['id'], parse_mode='HTML',
-                                  text=welcome_message)
+                                  text=welcome_message, disable_web_page_preview=True)
 
     def check_if_someone_said_keyword(self, response):
         # If the needed time has passed since the last keyword was detected
