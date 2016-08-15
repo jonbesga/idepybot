@@ -65,9 +65,9 @@ class Bot(BaseBot):
 
                 welcome_message += '{0}!</b>\n'.format(first_name)
                 welcome_message += ('Durante tu estancia aquí es importante que '
-                                    'conozcas las reglas del grupo. Pulsa el '
-                                    'siguiente hashtag #rules para ir al mensaje '
-                                    'con las reglas.')
+                                    'conozcas las reglas del grupo. '
+                                    '<a href="https://telegram.me/idepybot">Habla conmigo</a> '
+                                    'para conocerlas.')
 
                 self.send_message(msg['chat']['id'], parse_mode='HTML',
                                   text=welcome_message)
@@ -152,11 +152,10 @@ class Bot(BaseBot):
             self.check_if_user_joined(response)
 
             if 'text' in response['message']:
-                pass
-                # if response['message']['text'] == '/rules' or response['message']['text'] == '/rules@IdePyBot':
-                #     json_response = self.send_message(response['message']['from']['id'],
-                #                       parse_mode='HTML', text=self.pinned_message)
-                    # print(json_response)
+                if response['message']['text'] == '/start': # or response['message']['text'] == '/rules@IdePyBot':
+                    json_response = self.send_message(response['message']['from']['id'],
+                                      parse_mode='HTML', text=self.pinned_message)
+                    print(json_response)
                 # else:
                 #     pass
                     # self.check_if_someone_said_keyword(response)
