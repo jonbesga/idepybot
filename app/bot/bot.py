@@ -154,7 +154,7 @@ class Bot(BaseBot):
             if 'text' in response['message']:
                 if response['message']['text'] == '/start': # or response['message']['text'] == '/rules@IdePyBot':
                     json_response = self.send_message(response['message']['from']['id'],
-                                      parse_mode='HTML', text=self.pinned_message)
+                                      parse_mode='HTML', disable_web_page_preview=True, text=self.pinned_message)
                     print(json_response)
                 # else:
                 #     pass
